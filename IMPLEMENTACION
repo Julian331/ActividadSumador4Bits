@@ -1,0 +1,55 @@
+# COMPUERTAS LOGICAS BASICAS
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+# XOR construido con compuertas basicas
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+
+# SUMADOR COMPLETO DE 1 BIT
+def full_adder(a, b, ci):
+    x = XOR(a, b)
+    s = XOR(x, ci)
+
+    c1 = AND(a, b)
+    c2 = AND(ci, x)
+    cout = OR(c1, c2)
+
+    return s, cout
+
+
+# SUMADOR–RESTADOR DE 4 BITS
+def add_sub_4bits(A, B, M):
+    S = [0, 0, 0, 0]
+    ci = M  # carry inicial = M (clave para la resta)
+
+    for i in range(4):
+        b_mod = XOR(B[i], M)  # B' = B XOR M
+        S[i], ci = full_adder(A[i], b_mod, ci)
+
+    return S, ci
+
+
+# ================= PRUEBAS =================
+
+# PRUEBA 1: SUMA 5 + 3 = 8
+A = [1, 0, 1, 0]  # 0101
+B = [1, 1, 0, 0]  # 0011
+M = 0  # SUMA
+
+S, Cout = add_sub_4bits(A, B, M)
+print("SUMA")
+print("Resultado:", S, "Carry:", Cout)
+
+# PRUEBA 2: RESTA 5 - 3 = 2
+M = 1  # RESTA
+S, Cout = add_sub_4bits(A, B, M)
+print("\nRESTA")
+print("Resultado:", S, "Carry:", Cout)
